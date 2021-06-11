@@ -1,21 +1,29 @@
-version: '3'
+version: "3"
 
 services:
   drupal:
     image: drupal:9-apache
-    ports: 
+    ports:
       - 8080:80
-    volumes: 
+    volumes:
       - /var/www/html/modules
       - /var/www/html/profiles
       - /var/www/html/sites
       - /var/www/html/themes
     restart: always
-  postgres:
+  postgres-db:
     image: postgres:13
     environment:
       POSTGRES_DB: $POSTGRES_DB
       POSTGRES_USER: $POSTGRES_USER
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    networks:
+      drupal_net:
     ports:
       - 5433:5432
+    volumes:
+      - /var/lib/postgresql/data
+    restart: always
+networks:
+  drupal_net:
+    driver: bridge
